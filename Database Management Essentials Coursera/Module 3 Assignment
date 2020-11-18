@@ -35,7 +35,7 @@ CREATE TABLE EventRequest (
 	   CONSTRAINT StatusCheck           CHECK (Status IN ('Pending', 'Denied', 'Approved')), 
 	   CONSTRAINT AudienceCheck         CHECK (Estaudience > 0), 
 	   CONSTRAINT PkEventRequest        PRIMARY KEY (EventNo),
-	   CONSTRAINT FkEventRequestCustno  FOREIGN KEY (FacNo)   REFERENCES Facility (FacNo),
+	   CONSTRAINT FkEventRequestFacNo  FOREIGN KEY (FacNo)   REFERENCES Facility (FacNo),
 	   CONSTRAINT FkEventRequestCustNo  FOREIGN KEY (CustNo)  REFERENCES Customer (CustNo));
 
 CREATE TABLE Facility (
