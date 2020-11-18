@@ -1,0 +1,73 @@
+Module 4 Assignement
+#######################
+ORACLE SQL Developer
+
+
+--Graded Problems for Module 4
+-- Problem 1.
+SELECT
+  DISTINCT(City),
+  State,
+  Zip
+FROM
+  Customer;
+
+-- Problem 2.
+SELECT
+  EmpName,
+  Department,
+  Phone,
+  Email
+FROM
+  Employee
+WHERE
+  Phone LIKE '3%';
+
+-- Problem 3.
+SELECT
+  *
+FROM
+  Resourcetbl
+WHERE
+  Rate BETWEEN 10 AND 20
+ORDER BY
+  Rate;
+  
+-- Problem 4.
+SELECT
+  EventNo,
+  DateAuth,
+  Status
+FROM
+  EventRequest
+WHERE
+  (
+  Status = 'Approved'
+  OR
+  Status = 'Denied'
+  )
+  AND
+  DateAuth BETWEEN '01/Jul/2018' AND '31/Jul/2018';
+  
+-- Problem 5.
+SELECT
+ LocNo,
+ LocName
+FROM
+  Location
+INNER JOIN
+  Facility
+  ON
+  Location.Facno = Facility.Facno
+WHERE
+  FacName = 'Basketball arena';
+
+  -- Problem 6.
+SELECT
+  PlanNo,
+  COUNT(LineNo)   AS Total_Lines,
+  SUM(NumberFld)  AS Total_Fld
+FROM
+  EventPlanLine
+GROUP BY
+  PlanNo;
