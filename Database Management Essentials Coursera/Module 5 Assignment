@@ -1,0 +1,344 @@
+Module05 Assignment- Oracle
+--------------------------
+
+
+Problem 1.
+
+SELECT 
+  EventRequest.EventNo,
+  DateHeld,
+  COUNT(*) AS "Number of Plans"
+FROM 
+  EventRequest,
+  EventPlan
+WHERE 
+  EventRequest.EventNo = EventPlan.EventNo
+  AND
+  EventPlan.WorkDate BETWEEN '1-Dec-2018' AND '31-Dec-2018' 
+GROUP BY 
+  EventRequest.EventNo,
+  DateHeld
+HAVING 
+  COUNT(*) > 1;
+--------------------------------
+Problem 2.
+
+-- Condition using default date format
+SELECT 
+  eventplan.planno,
+  eventrequest.eventno,
+  workdate,
+  activity
+FROM 
+  eventrequest,
+  eventplan,
+  facility
+WHERE 
+  eventrequest.eventno = eventplan.eventno 
+  AND 
+  eventrequest.facno = facility.facno
+  AND
+  eventplan.workdate BETWEEN '1-Dec-2018' AND '31-Dec-2018' 
+  AND 
+  facname = 'Basketball arena';
+
+--------------------------------
+Problem 3.	
+	
+SELECT 
+  eventrequest.eventno,
+  dateheld,
+  status,
+  estcost
+FROM 
+  eventrequest,
+  employee,
+  facility,
+  eventplan
+WHERE 
+  eventplan.empno = employee.empno
+  AND
+  eventrequest.facno = facility.facno
+  AND
+  eventrequest.eventno = eventplan.eventno
+  AND 
+  eventplan.workdate BETWEEN '1-Oct-2018' AND '31-Dec-2018' 
+  AND 
+  AND facname = 'Basketball arena' AND empname = 'Mary Manager';
+
+
+Problem 4.
+
+SELECT 
+  eventplan.planno,
+  lineno,
+  locname,
+  resname,
+  numberfld,
+  timestart,
+  timeend
+FROM 
+  facility,
+  eventplan,
+  eventplanline,
+  resourcetbl,
+  location
+WHERE 
+  eventplan.planno = eventplanline.planno
+  AND 
+  location.facno = facility.facno
+  AND 
+  location.locno = eventplanline.locno 
+  AND 
+  eventplan.activity = 'Operation';
+  AND
+  eventplan.workdate BETWEEN '1-Oct-2018' AND '31-Dec-2018';
+ 
+
+Database Modification Answers
+
+1.	
+INSERT INTO Facility ( FacNo, FacName )
+VALUES ('F107', 'Swimming Pool');
+
+2.	
+INSERT INTO Location ( LocNo, FacNo, LocName )
+VALUES ('L107', 'F107', 'Door');
+
+3.	
+INSERT INTO Location ( LocNo, FacNo, LocName )
+VALUES ('L108', 'F107', 'Locker Room');
+
+4.	
+UPDATE Location SET LocName = ÔGateÕ
+WHERE LocNo = 'L107'; 
+
+5.
+DELETE Location
+WHERE LocNo = 'L108';
+
+
+Oracle SQL statements with errors and poor formatting
+
+1.
+-- Original statement
+-- Semantic error: missing join condition (eventrequest-eventplan)
+
+SELECT 
+  eventrequest.eventno,
+  dateheld,
+  status,
+  estcost
+FROM 
+  eventrequest,
+  employee,
+  facility,
+  eventplan
+WHERE 
+  estaudience > 5000
+  AND 
+  eventplan.empno = employee.empno 
+  AND 
+  eventrequest.facno = facility.facno
+  AND 
+  facname = 'Football stadium' 
+  AND 
+  empname = 'Mary Manager';
+
+-- Corrected statement
+
+SELECT 
+  eventrequest.eventno,
+  dateheld,
+  status,
+  estcost
+FROM 
+  eventrequest,
+  employee,
+  facility,
+  eventplan
+WHERE 
+  estaudience > 5000
+  AND 
+  eventplan.empno = employee.empno 
+  AND 
+  eventrequest.facno = facility.facno
+  AND 
+  eventrequest.eventno = eventplan.eventno
+  AND 
+  facname = 'Football stadium' 
+  AND 
+  empname = 'Mary Manager';
+
+2.
+-- Original statement
+-- Redundancy error: GROUP BY clause not needed
+
+SELECT DISTINCT 
+  eventrequest.eventno,
+  dateheld,
+  status,
+  estcost
+FROM 
+  eventrequest,
+  eventplan
+WHERE 
+  estaudience > 4000
+  AND 
+  eventplan.eventno = eventrequest.eventno 
+GROUP BY 
+  eventrequest.eventno,
+  dateheld,
+  status,
+  estcost;
+
+-- Corrected statement with no GROUP BY clause
+
+SELECT DISTINCT 
+  eventrequest.eventno,
+  dateheld,
+  status,
+  estcost
+FROM 
+  eventrequest,
+  eventplan
+WHERE 
+  estaudience > 4000
+  AND 
+  eventplan.eventno = eventrequest.eventno;
+
+3.
+-- Original statement
+-- Redundancy error: extra table (employee)
+
+SELECT DISTINCT 
+  eventrequest.eventno,
+  dateheld,
+  status,
+  estcost
+FROM 
+  eventrequest,
+  employee,
+  facility,
+  eventplan
+WHERE 
+  estaudience > 5000
+  AND 
+  eventplan.empno = employee.empno 
+  AND 
+  eventrequest.facno = facility.facno
+  AND 
+  eventplan.eventno = eventrequest.eventno 
+  AND 
+  facname = 'Football stadium';
+
+-- Corrected statement
+
+SELECT DISTINCT
+  eventrequest.eventno,
+  dateheld,
+  status,
+  estcost
+FROM 
+  eventrequest,
+  facility,
+  eventplan
+WHERE 
+  estaudience > 5000
+  AND 
+  eventrequest.facno = facility.facno
+  AND 
+  eventplan.eventno = eventrequest.eventno 
+  AND 
+  facname = 'Football stadium';
+
+4.
+-- Original statement
+-- Syntax errors: misspelled keyword (BETWEN) and unqualified name (eventno)
+
+SELECT DISTINCT 
+  eventno,
+  dateheld,
+  status,
+  estcost
+FROM 
+  eventrequest,
+  employee,
+  eventplan
+WHERE 
+  estaudience BETWEN 5000 AND 10000
+  AND 
+  eventplan.empno = employee.empno 
+  AND 
+  eventrequest.eventno = eventplan.eventno
+  AND 
+  empname = 'Mary Manager';
+
+-- Corrected statement
+-- Note: eventno can be qualified with either eventrequest or eventplan table
+
+SELECT DISTINCT 
+  eventrequest.eventno,
+  dateheld,
+  status,
+  estcost
+FROM 
+  eventrequest,
+  employee,
+  eventplan
+WHERE 
+  estaudience BETWEEN 5000 AND 10000
+  AND 
+  eventplan.empno = employee.empno 
+  AND 
+  eventrequest.eventno = eventplan.eventno
+  AND 
+  empname = 'Mary Manager';
+
+5.
+-- Original statement with poor coding practices
+-- Poor clause and condition alignment
+-- Incompatible constant in WHERE condition: estaudience = '10000'
+
+SELECT eventplan.planno, lineno, resname, 
+numberfld, timestart, timeend
+    FROM eventrequest, facility, eventplan, 
+eventplanline, resourcetbl
+     WHERE estaudience = '10000' AND eventplan.planno = 
+eventplanline.planno AND eventrequest.facno 
+= facility.facno
+      AND facname = 
+'Basketball arena' AND 
+   eventplanline.resno = resourcetbl.resno
+      AND eventrequest.eventno = eventplan.eventno;
+
+-- Rewritten statement with improved coding practices
+-- Note: many ways to reformat the statement
+-- Should align clauses and conditions
+-- Numeric constant in WHERE condition: estaudience = 10000
+
+SELECT 
+  eventplan.planno,
+  lineno,
+  resname,
+  numberfld,
+  timestart,
+  timeend
+FROM 
+  eventrequest,
+  facility,
+  eventplan,
+  eventplanline,
+  resourcetbl
+WHERE 
+  estaudience = 10000
+  AND 
+  eventplan.planno = eventplanline.planno 
+  AND 
+  eventrequest.facno = facility.facno
+  AND 
+  facname = 'Basketball arena' 
+  AND
+  eventplanline.resno = resourcetbl.resno
+  AND
+  eventrequest.eventno = eventplan.eventno;
